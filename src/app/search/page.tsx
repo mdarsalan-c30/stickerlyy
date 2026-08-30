@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Search, Loader2, Plus, Download } from "lucide-react";
+import { Search, Loader2, Plus, Download, PackagePlus } from "lucide-react";
 
 export default function SearchPage() {
   const [query, setQuery] = useState("");
@@ -108,14 +108,30 @@ export default function SearchPage() {
                   (e.target as HTMLImageElement).src = "https://placehold.co/400x400/eeeeee/666666?text=Broken+Link";
                 }}
               />
-              <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition flex items-center justify-center gap-4">
+              {/* Desktop Hover Overlay / Mobile Visible Overlay */}
+              <div className="absolute bottom-0 left-0 right-0 bg-black/60 p-3 flex items-center justify-between opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition">
                  <button 
                    onClick={() => window.location.href = `/create?image=${encodeURIComponent(url)}`}
-                   className="bg-white text-gray-900 p-2 rounded-full hover:scale-110 transition" 
-                   title="Add to Editor"
+                   className="flex items-center gap-1 bg-white text-gray-900 px-3 py-1.5 rounded-full hover:scale-105 transition text-sm font-medium" 
+                   title="Edit & Add to Pack"
                  >
-                   <Plus className="w-5 h-5" />
+                   <Plus className="w-4 h-4" /> Edit
                  </button>
+
+                 <button 
+                   onClick={() => {
+                     const saved = localStorage.getItem("sticker_pack");
+                     const currentPack = saved ? JSON.parse(saved) : [];
+                     currentPack.push(url);
+                     localStorage.setItem("sticker_pack", JSON.stringify(currentPack));
+                     alert("Added to your Sticker Pack!");
+                   }}
+                   className="flex items-center gap-1 bg-purple-500 text-white px-3 py-1.5 rounded-full hover:scale-105 transition text-sm font-medium" 
+                   title="Directly Add to Pack"
+                 >
+                   <PackagePlus className="w-4 h-4" /> Add
+                 </button>
+
                  <button 
                    onClick={async () => {
                      try {
@@ -132,10 +148,10 @@ export default function SearchPage() {
                        alert('Failed to download image.');
                      }
                    }}
-                   className="bg-green-500 text-white p-2 rounded-full hover:scale-110 transition" 
+                   className="flex items-center gap-1 bg-green-500 text-white px-3 py-1.5 rounded-full hover:scale-105 transition text-sm font-medium" 
                    title="Download"
                  >
-                   <Download className="w-5 h-5" />
+                   <Download className="w-4 h-4" /> 
                  </button>
               </div>
             </div>
