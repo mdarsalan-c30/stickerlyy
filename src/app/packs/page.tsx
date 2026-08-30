@@ -1,15 +1,15 @@
 ﻿"use client";
 
 import { useState, useEffect } from "react";
-import { Trash2, Send, Plus, AlertCircle } from "lucide-react";
+import { Trash2, Send, Plus, AlertCircle, Share2, Copy } from "lucide-react";
 import Link from "next/link";
+import JSZip from "jszip";
 
 export default function PackManager() {
   const [packName, setPackName] = useState("My Awesome Pack");
   const [author, setAuthor] = useState("Stickerly User");
   const [stickers, setStickers] = useState<string[]>([]);
 
-  // Load stickers from local storage on mount
   useEffect(() => {
     const saved = localStorage.getItem("sticker_pack");
     if (saved) {
@@ -32,12 +32,83 @@ export default function PackManager() {
     savePack(updated);
   };
 
-  const handleAddToWhatsApp = () => {
+  const handleExportWastickers = async () => {
     if (stickers.length < 3) {
       alert("WhatsApp requires at least 3 stickers in a pack!");
       return;
     }
-    alert("In a compiled Android app, this will trigger the native WhatsApp intent! For now on web, this is a placeholder.");
+    
+    try {
+      const zip = new JSZip();
+      
+      // Metadata files
+      zip.file("author.txt", author);
+      zip.file("title.txt", packName);
+
+      // Add each sticker
+      for (let i = 0; i < stickers.length; i++) {
+        const url = stickers[i];
+        try {
+          const res = await fetch(url);
+          const blob = await res.blob();
+          zip.file("sticker_" + i + ".webp", blob);
+        } catch (err) {
+          console.error("Failed to fetch sticker", err);
+        }
+      }
+
+      const content = await zip.generateAsync({ type: "blob" });
+      const blobUrl = window.URL.createObjectURL(content);
+      const link = document.createElement("a");
+      link.href = blobUrl;
+      link.download = packName.replace(/\s+/g, '_') + ".wastickers";
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    } catch (e) {
+      alert("Failed to generate .wastickers file");
+    }
+  };
+
+  const shareToWhatsApp = async (url: string) => {
+    try {
+      const res = await fetch(url);
+      const blob = await res.blob();
+      const file = new File([blob], "sticker.gif", { type: blob.type });
+
+      if (navigator.canShare && navigator.canShare({ files: [file] })) {
+        await navigator.share({
+          files: [file],
+          title: "Sticker",
+          text: "Check out this sticker from Stickerly!",
+        });
+      } else {
+        // Fallback to whatsapp intent link if Web Share API is unsupported
+        window.open("https://api.whatsapp.com/send?text=" + encodeURIComponent("Check out this sticker: " + url), "_blank");
+      }
+    } catch (error) {
+      alert("Sharing failed. Your browser might not support sharing files directly.");
+    }
+  };
+
+  const copyToClipboard = async (url: string) => {
+    try {
+      const res = await fetch(url);
+      const blob = await res.blob();
+      
+      // Clipboard API expects PNGs typically, but we try
+      if (blob.type === "image/png") {
+        await navigator.clipboard.write([
+          new ClipboardItem({ [blob.type]: blob })
+        ]);
+        alert("Copied to clipboard! Paste it in WhatsApp.");
+      } else {
+        // Fallback for GIFs: Just copy the link or alert
+        alert("Due to browser limits, only PNGs can be copied to clipboard. Use the Share button instead!");
+      }
+    } catch (err) {
+      alert("Failed to copy to clipboard.");
+    }
   };
 
   return (
@@ -45,13 +116,13 @@ export default function PackManager() {
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
         <div>
           <h1 className="text-3xl font-bold">Your Sticker Pack</h1>
-          <p className="text-gray-500">Manage your stickers before exporting to WhatsApp</p>
+          <p className="text-gray-500">Manage your stickers before exporting</p>
         </div>
         <button 
-          onClick={handleAddToWhatsApp}
+          onClick={handleExportWastickers}
           className="px-6 py-3 bg-green-500 text-white rounded-xl hover:bg-green-600 transition flex items-center gap-2 font-bold shadow-sm hover:shadow-md"
         >
-          <Send className="w-5 h-5" /> Add to WhatsApp
+          <Send className="w-5 h-5" /> Export .wastickers
         </button>
       </div>
 
@@ -80,23 +151,39 @@ export default function PackManager() {
         {stickers.length < 3 && (
           <div className="flex items-center gap-2 text-amber-600 bg-amber-50 p-4 rounded-lg mb-6">
             <AlertCircle className="w-5 h-5" />
-            <p className="text-sm font-medium">You need at least {3 - stickers.length} more sticker(s) to add to WhatsApp.</p>
+            <p className="text-sm font-medium">You need at least {3 - stickers.length} more sticker(s) to export a full pack.</p>
           </div>
         )}
 
-        <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-4">
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-6">
           {stickers.map((img, i) => (
-            <div key={i} className="aspect-square relative group bg-gray-100 rounded-xl overflow-hidden border border-gray-200 flex items-center justify-center">
-               {/* eslint-disable-next-line @next/next/no-img-element */}
-               <img src={img} alt={"Sticker "} className="w-full h-full object-contain p-2" />
-               <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition flex items-center justify-center">
-                 <button 
-                   onClick={() => removeSticker(i)}
-                   className="bg-red-500 text-white p-2 rounded-full hover:scale-110 transition"
-                 >
-                   <Trash2 className="w-5 h-5" />
-                 </button>
-               </div>
+            <div key={i} className="flex flex-col gap-2">
+              <div className="aspect-square relative group bg-gray-100 rounded-xl overflow-hidden border border-gray-200 flex items-center justify-center">
+                 {/* eslint-disable-next-line @next/next/no-img-element */}
+                 <img src={img} alt={"Sticker "} className="w-full h-full object-contain p-2" />
+                 <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition flex items-center justify-center">
+                   <button 
+                     onClick={() => removeSticker(i)}
+                     className="bg-red-500 text-white p-2 rounded-full hover:scale-110 transition"
+                   >
+                     <Trash2 className="w-5 h-5" />
+                   </button>
+                 </div>
+              </div>
+              <div className="flex justify-between gap-2">
+                <button 
+                  onClick={() => shareToWhatsApp(img)}
+                  className="flex-1 flex items-center justify-center gap-1 bg-green-50 text-green-700 py-1.5 rounded-lg hover:bg-green-100 transition text-sm font-medium"
+                >
+                  <Share2 className="w-4 h-4" /> Share
+                </button>
+                <button 
+                  onClick={() => copyToClipboard(img)}
+                  className="flex-1 flex items-center justify-center gap-1 bg-gray-50 text-gray-700 py-1.5 rounded-lg hover:bg-gray-100 transition text-sm font-medium"
+                >
+                  <Copy className="w-4 h-4" /> Copy
+                </button>
+              </div>
             </div>
           ))}
 
