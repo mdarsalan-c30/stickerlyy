@@ -65,7 +65,7 @@ export default function PackManager() {
         });
         return;
       }
-    } catch (e: any) {
+    } catch (e: unknown) {
       alert("Plugin Error: " + (e.message || JSON.stringify(e)));
       console.warn("Plugin failed", e);
     }
@@ -242,6 +242,7 @@ export default function PackManager() {
     </div>
   );
 }
+
 
 
 

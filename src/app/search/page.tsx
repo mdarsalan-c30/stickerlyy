@@ -31,7 +31,7 @@ export default function SearchPage() {
       if (data.urls && data.urls.length === 0) {
         setError("No results found for that query.");
       }
-    } catch (err: any) {
+    } catch (err: unknown) {
       setError(err.message);
     } finally {
       setLoading(false);
@@ -161,4 +161,5 @@ export default function SearchPage() {
     </div>
   );
 }
+
 
