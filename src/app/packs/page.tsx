@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { useState, useEffect } from "react";
 import { Trash2, Send, Plus, AlertCircle, Share2, Copy } from "lucide-react";
@@ -118,12 +118,25 @@ export default function PackManager() {
           <h1 className="text-3xl font-bold">Your Sticker Pack</h1>
           <p className="text-gray-500">Manage your stickers before exporting</p>
         </div>
-        <button 
-          onClick={handleExportWastickers}
-          className="px-6 py-3 bg-green-500 text-white rounded-xl hover:bg-green-600 transition flex items-center gap-2 font-bold shadow-sm hover:shadow-md"
-        >
-          <Send className="w-5 h-5" /> Export .wastickers
-        </button>
+        <div className="flex gap-2">
+          <button 
+            onClick={() => {
+              if (confirm("Are you sure you want to delete all saved stickers?")) {
+                setStickers([]);
+                localStorage.removeItem("sticker_pack");
+              }
+            }}
+            className="px-4 py-3 bg-red-50 text-red-600 rounded-xl hover:bg-red-100 transition flex items-center gap-2 font-bold shadow-sm"
+          >
+            <Trash2 className="w-5 h-5" /> Clear All
+          </button>
+          <button 
+            onClick={handleExportWastickers}
+            className="px-6 py-3 bg-green-500 text-white rounded-xl hover:bg-green-600 transition flex items-center gap-2 font-bold shadow-sm hover:shadow-md"
+          >
+            <Send className="w-5 h-5" /> Export .wastickers
+          </button>
+        </div>
       </div>
 
       <div className="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden mb-8 p-6">
