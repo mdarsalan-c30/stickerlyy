@@ -32,10 +32,42 @@ export default function PackManager() {
     savePack(updated);
   };
 
+    const toBase64 = async (src: string) => {
+    if (src.startsWith('data:')) return src;
+    const res = await fetch(src);
+    const blob = await res.blob();
+    return new Promise<string>((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onloadend = () => resolve(reader.result as string);
+      reader.onerror = reject;
+      reader.readAsDataURL(blob);
+    });
+  };
+
   const handleExportWastickers = async () => {
     if (stickers.length < 3) {
       alert("WhatsApp requires at least 3 stickers in a pack!");
       return;
+    }
+    
+    try {
+      const { Capacitor } = await import('@capacitor/core');
+      if (Capacitor.isNativePlatform()) {
+        const { WhatsAppStickers } = await import('../../lib/whatsapp');
+        const base64Stickers = await Promise.all(stickers.map(s => toBase64(s)));
+        
+        await WhatsAppStickers.addToWhatsApp({
+          identifier: "pack_" + Date.now(),
+          name: packName || "My Awesome Pack",
+          author: author || "Stickerly User",
+          trayImage: base64Stickers[0],
+          stickers: base64Stickers
+        });
+        return;
+      }
+    } catch (e: any) {
+      alert("Plugin Error: " + (e.message || JSON.stringify(e)));
+      console.warn("Plugin failed", e);
     }
     
     try {
@@ -210,6 +242,7 @@ export default function PackManager() {
     </div>
   );
 }
+
 
 
 
