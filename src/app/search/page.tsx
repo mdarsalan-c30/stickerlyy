@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState } from "react";
 import { Search, Loader2, Plus, Download, PackagePlus } from "lucide-react";
@@ -62,9 +62,9 @@ export default function SearchPage() {
           </button>
         </form>
 
-        {/* Trending Categories */}
+        {/* Trending Categories  */}
         <div className="mt-6">
-          <p className="text-sm text-gray-500 mb-3 text-center">Trending Categories</p>
+          <p className="text-sm text-gray-500 mb-3 text-center">Trending Categories </p>
           <div className="flex flex-wrap justify-center gap-2">
             {["Cute Baby Girl", "Cute Baby Boy", "Meme Sticker Indian", "Romantic", "Indirect Flirt"].map((cat) => (
               <button 
@@ -161,3 +161,4 @@ export default function SearchPage() {
     </div>
   );
 }
+
