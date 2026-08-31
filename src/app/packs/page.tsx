@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState, useEffect } from "react";
 import { Trash2, Send, Plus, AlertCircle, Share2, Copy } from "lucide-react";
@@ -134,7 +134,7 @@ export default function PackManager() {
             onClick={handleExportWastickers}
             className="px-6 py-3 bg-green-500 text-white rounded-xl hover:bg-green-600 transition flex items-center gap-2 font-bold shadow-sm hover:shadow-md"
           >
-            <Send className="w-5 h-5" /> Export .wastickers
+            <Send className="w-5 h-5" /> {typeof window !== 'undefined' && (window as any).Capacitor?.isNativePlatform() ? 'Add to WhatsApp' : 'Export .wastickers'}
           </button>
         </div>
       </div>
@@ -210,3 +210,5 @@ export default function PackManager() {
     </div>
   );
 }
+
+
