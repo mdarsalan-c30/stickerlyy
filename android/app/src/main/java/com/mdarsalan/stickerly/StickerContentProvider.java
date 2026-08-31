@@ -1,4 +1,4 @@
-package com.mdarsalan.stickerly;
+﻿package com.mdarsalan.stickerly;
 
 import android.content.ContentProvider;
 import android.content.ContentValues;
@@ -71,7 +71,7 @@ public class StickerContentProvider extends ContentProvider {
         // WhatsApp requires this specific format
         cursor.addRow(new Object[]{
                 identifier, name, publisher, trayImage,
-                "", "", "", "", "", "", "1", 0, 0
+                "https://play.google.com/store/apps/details?id=" + getContext().getPackageName(), "", "", "", "", "", "1", 0, 0
         });
 
         return cursor;
@@ -86,7 +86,7 @@ public class StickerContentProvider extends ContentProvider {
 
         int count = prefs.getInt("sticker_count", 0);
         for (int i = 0; i < count; i++) {
-            cursor.addRow(new Object[]{ i + ".webp", "😄" });
+            cursor.addRow(new Object[]{ i + ".webp", "ðŸ˜„" });
         }
         return cursor;
     }
@@ -130,4 +130,5 @@ public class StickerContentProvider extends ContentProvider {
     @Override
     public int update(@NonNull Uri uri, @Nullable ContentValues values, @Nullable String selection, @Nullable String[] selectionArgs) { return 0; }
 }
+
 
