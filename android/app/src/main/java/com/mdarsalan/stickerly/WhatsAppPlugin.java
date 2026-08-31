@@ -4,6 +4,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.ActivityNotFoundException;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.util.Base64;
 import android.util.Log;
 
@@ -34,14 +36,13 @@ public class WhatsAppPlugin extends Plugin {
             JSArray stickers = call.getArray("stickers");
             
             if (stickers == null || stickers.length() < 3) {
-                call.reject("WhatsApp requires at least 3 stickers in a pack.");
+                call.reject("WhatsApp requires at least 3 stickers in a pack!");
                 return;
             }
 
             Context context = getContext();
             File packDir = new File(context.getFilesDir(), "stickers/" + identifier);
             
-            // Clean old files
             if (packDir.exists()) {
                 File[] files = packDir.listFiles();
                 if (files != null) {
@@ -50,16 +51,15 @@ public class WhatsAppPlugin extends Plugin {
             }
             packDir.mkdirs();
             
-            // Save tray image
-            saveBase64ToFile(trayBase64, new File(packDir, "tray.webp"));
+            // Save tray image (96x96 required by WA)
+            saveImage(trayBase64, new File(packDir, "tray.webp"), 96, 96);
             
-            // Save stickers
+            // Save stickers (512x512 required by WA)
             for (int i = 0; i < stickers.length(); i++) {
                 String base64 = stickers.getString(i);
-                saveBase64ToFile(base64, new File(packDir, i + ".webp"));
+                saveImage(base64, new File(packDir, i + ".webp"), 512, 512);
             }
             
-            // Save metadata to SharedPreferences
             SharedPreferences prefs = context.getSharedPreferences("sticker_pack_prefs", Context.MODE_PRIVATE);
             prefs.edit()
                 .putString("identifier", identifier)
@@ -69,7 +69,6 @@ public class WhatsAppPlugin extends Plugin {
                 .putInt("sticker_count", stickers.length())
                 .apply();
 
-            // Trigger WhatsApp Intent
             Intent intent = new Intent();
             intent.setAction("com.whatsapp.intent.action.ENABLE_STICKER_PACK");
             intent.putExtra("sticker_pack_id", identifier);
@@ -87,15 +86,23 @@ public class WhatsAppPlugin extends Plugin {
         }
     }
     
-    private void saveBase64ToFile(String base64Str, File file) throws Exception {
+    private void saveImage(String base64Str, File file, int width, int height) throws Exception {
         if (base64Str == null) return;
         if (base64Str.contains(",")) {
             base64Str = base64Str.split(",")[1];
         }
         byte[] decodedBytes = Base64.decode(base64Str, Base64.DEFAULT);
+        Bitmap bitmap = BitmapFactory.decodeByteArray(decodedBytes, 0, decodedBytes.length);
+        
+        Bitmap scaled = Bitmap.createScaledBitmap(bitmap, width, height, true);
+        
         FileOutputStream fos = new FileOutputStream(file);
-        fos.write(decodedBytes);
+        // WEBP is required by WhatsApp
+        scaled.compress(Bitmap.CompressFormat.WEBP, 80, fos);
         fos.flush();
         fos.close();
+        
+        if (bitmap != scaled) bitmap.recycle();
+        scaled.recycle();
     }
 }
