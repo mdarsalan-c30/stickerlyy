@@ -1,4 +1,4 @@
-﻿package com.mdarsalan.stickerly;
+package com.mdarsalan.stickerly;
 
 import android.content.ContentProvider;
 import android.content.ContentValues;
@@ -86,7 +86,7 @@ public class StickerContentProvider extends ContentProvider {
 
         int count = prefs.getInt("sticker_count", 0);
         for (int i = 0; i < count; i++) {
-            cursor.addRow(new Object[]{ i + ".webp", "ðŸ˜„" });
+            cursor.addRow(new Object[]{ i + ".webp", "\uD83D\uDE00" });
         }
         return cursor;
     }
