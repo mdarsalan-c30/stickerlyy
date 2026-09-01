@@ -1,4 +1,5 @@
-﻿"use client";
+﻿/* eslint-disable @typescript-eslint/no-explicit-any */
+"use client";
 
 import { useState, useEffect } from "react";
 import { Trash2, Send, Plus, AlertCircle, Share2, Copy } from "lucide-react";
@@ -242,6 +243,7 @@ export default function PackManager() {
     </div>
   );
 }
+
 
 
 

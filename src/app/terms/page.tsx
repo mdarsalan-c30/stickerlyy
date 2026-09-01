@@ -12,7 +12,7 @@
         <p>You are solely responsible for the stickers you create and share using our platform. You agree not to use Stickerly to create, share, or distribute offensive, illegal, or copyrighted material without permission.</p>
         
         <h2 className="text-xl font-semibold mt-6 mb-3">3. Disclaimer of Warranty</h2>
-        <p>Stickerly is provided "as is" without warranty of any kind. We do not guarantee that the app will always function without interruption or error.</p>
+        <p>Stickerly is provided &quot;as is&quot; without warranty of any kind. We do not guarantee that the app will always function without interruption or error.</p>
         
         <h2 className="text-xl font-semibold mt-6 mb-3">4. Limitation of Liability</h2>
         <p>We shall not be liable for any indirect, incidental, or consequential damages resulting from your use of the application.</p>
@@ -20,3 +20,4 @@
     </div>
   );
 }
+

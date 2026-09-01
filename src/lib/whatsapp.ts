@@ -1,4 +1,5 @@
-﻿import { registerPlugin } from '@capacitor/core';
+﻿/* eslint-disable @typescript-eslint/no-explicit-any */
+import { registerPlugin } from '@capacitor/core';
 
 export interface WhatsAppStickersPlugin {
   addToWhatsApp(options: {
@@ -11,3 +12,4 @@ export interface WhatsAppStickersPlugin {
 }
 
 export const WhatsAppStickers = registerPlugin<WhatsAppStickersPlugin>('WhatsAppStickers');
+

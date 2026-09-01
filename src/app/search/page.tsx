@@ -1,4 +1,5 @@
-﻿"use client";
+﻿/* eslint-disable @typescript-eslint/no-explicit-any */
+"use client";
 
 import { useState } from "react";
 import { Search, Loader2, Plus, Download, PackagePlus } from "lucide-react";
@@ -161,6 +162,7 @@ export default function SearchPage() {
     </div>
   );
 }
+
 
 
 
