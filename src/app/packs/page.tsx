@@ -86,7 +86,7 @@ export default function PackManager() {
           const blob = await res.blob();
           zip.file("sticker_" + i + ".webp", blob);
         } catch (e: any) {
-          console.error("Failed to fetch sticker", err);
+          console.error("Failed to fetch sticker", e);
         }
       }
 
@@ -243,6 +243,7 @@ export default function PackManager() {
     </div>
   );
 }
+
 
 
 
