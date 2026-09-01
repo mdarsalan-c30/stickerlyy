@@ -1,4 +1,4 @@
-package com.mdarsalan.stickerly;
+﻿package com.mdarsalan.stickerly;
 
 import android.content.ContentProvider;
 import android.content.ContentValues;
@@ -105,7 +105,7 @@ public class StickerContentProvider extends ContentProvider {
                 File file = new File(dir, fileName);
                 
                 if (file.exists()) {
-                    return new AssetFileDescriptor(ParcelFileDescriptor.open(file, ParcelFileDescriptor.MODE_READ_ONLY), 0, AssetFileDescriptor.UNKNOWN_LENGTH);
+                    return new AssetFileDescriptor(ParcelFileDescriptor.open(file, ParcelFileDescriptor.MODE_READ_ONLY), 0, file.length());
                 }
             }
         }
@@ -130,6 +130,7 @@ public class StickerContentProvider extends ContentProvider {
     @Override
     public int update(@NonNull Uri uri, @Nullable ContentValues values, @Nullable String selection, @Nullable String[] selectionArgs) { return 0; }
 }
+
 
 
 

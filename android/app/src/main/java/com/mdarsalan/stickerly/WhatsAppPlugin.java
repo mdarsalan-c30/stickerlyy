@@ -1,4 +1,4 @@
-package com.mdarsalan.stickerly;
+﻿package com.mdarsalan.stickerly;
 
 import android.content.Context;
 import android.content.Intent;
@@ -98,7 +98,7 @@ public class WhatsAppPlugin extends Plugin {
         
         FileOutputStream fos = new FileOutputStream(file);
         // WEBP is required by WhatsApp
-        scaled.compress(Bitmap.CompressFormat.WEBP, 80, fos);
+        scaled.compress(Bitmap.CompressFormat.WEBP, 60, fos);
         fos.flush();
         fos.close();
         
