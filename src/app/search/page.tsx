@@ -32,8 +32,8 @@ export default function SearchPage() {
       if (data.urls && data.urls.length === 0) {
         setError("No results found for that query.");
       }
-    } catch (err: unknown) {
-      setError(err.message);
+    } catch (e: any) {
+      setError(e.message);
     } finally {
       setLoading(false);
     }
@@ -145,7 +145,7 @@ export default function SearchPage() {
                        document.body.appendChild(link);
                        link.click();
                        document.body.removeChild(link);
-                     } catch (err: any) {
+                     } catch (e: any) {
                        alert('Failed to download image.');
                      }
                    }}
@@ -162,6 +162,7 @@ export default function SearchPage() {
     </div>
   );
 }
+
 
 
 

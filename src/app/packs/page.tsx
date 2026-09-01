@@ -66,7 +66,7 @@ export default function PackManager() {
         });
         return;
       }
-    } catch (e: unknown) {
+    } catch (e: any) {
       alert("Plugin Error: " + (e.message || JSON.stringify(e)));
       console.warn("Plugin failed", e);
     }
@@ -85,7 +85,7 @@ export default function PackManager() {
           const res = await fetch(url);
           const blob = await res.blob();
           zip.file("sticker_" + i + ".webp", blob);
-        } catch (err) {
+        } catch (e: any) {
           console.error("Failed to fetch sticker", err);
         }
       }
@@ -119,7 +119,7 @@ export default function PackManager() {
         // Fallback to whatsapp intent link if Web Share API is unsupported
         window.open("https://api.whatsapp.com/send?text=" + encodeURIComponent("Check out this sticker: " + url), "_blank");
       }
-    } catch (error) {
+    } catch (e: any) {
       alert("Sharing failed. Your browser might not support sharing files directly.");
     }
   };
@@ -139,7 +139,7 @@ export default function PackManager() {
         // Fallback for GIFs: Just copy the link or alert
         alert("Due to browser limits, only PNGs can be copied to clipboard. Use the Share button instead!");
       }
-    } catch (err) {
+    } catch (e: any) {
       alert("Failed to copy to clipboard.");
     }
   };
@@ -243,6 +243,7 @@ export default function PackManager() {
     </div>
   );
 }
+
 
 
 
