@@ -24,6 +24,7 @@ public class StickerContentProvider extends ContentProvider {
     public static final String AUTHORITY = "com.mdarsalan.stickerly.stickercontentprovider";
     public static final String METADATA = "metadata";
     public static final String STICKERS = "stickers";
+    public static final String STICKERS_ASSET = "stickers_asset";
 
     private static final UriMatcher MATCHER = new UriMatcher(UriMatcher.NO_MATCH);
     private static final int METADATA_CODE = 1;
@@ -34,7 +35,7 @@ public class StickerContentProvider extends ContentProvider {
         MATCHER.addURI(AUTHORITY, METADATA, METADATA_CODE);
         MATCHER.addURI(AUTHORITY, METADATA + "/*", 4);
         MATCHER.addURI(AUTHORITY, STICKERS + "/*", STICKERS_CODE);
-        MATCHER.addURI(AUTHORITY, STICKERS + "/*/*", STICKERS_ASSET_CODE);
+        MATCHER.addURI(AUTHORITY, STICKERS_ASSET + "/*/*", STICKERS_ASSET_CODE);
     }
 
     @Override
@@ -132,6 +133,7 @@ public class StickerContentProvider extends ContentProvider {
     @Override
     public int update(@NonNull Uri uri, @Nullable ContentValues values, @Nullable String selection, @Nullable String[] selectionArgs) { return 0; }
 }
+
 
 
 
