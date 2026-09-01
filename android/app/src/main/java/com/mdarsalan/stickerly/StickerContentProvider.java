@@ -1,4 +1,4 @@
-﻿package com.mdarsalan.stickerly;
+package com.mdarsalan.stickerly;
 
 import android.content.ContentProvider;
 import android.content.ContentValues;
