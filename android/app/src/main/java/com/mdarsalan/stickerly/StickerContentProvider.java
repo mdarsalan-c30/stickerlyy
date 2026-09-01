@@ -32,6 +32,7 @@ public class StickerContentProvider extends ContentProvider {
 
     static {
         MATCHER.addURI(AUTHORITY, METADATA, METADATA_CODE);
+        MATCHER.addURI(AUTHORITY, METADATA + "/*", METADATA_CODE);
         MATCHER.addURI(AUTHORITY, STICKERS + "/*", STICKERS_CODE);
         MATCHER.addURI(AUTHORITY, STICKERS + "/*/*", STICKERS_ASSET_CODE);
     }
@@ -130,6 +131,7 @@ public class StickerContentProvider extends ContentProvider {
     @Override
     public int update(@NonNull Uri uri, @Nullable ContentValues values, @Nullable String selection, @Nullable String[] selectionArgs) { return 0; }
 }
+
 
 
 
