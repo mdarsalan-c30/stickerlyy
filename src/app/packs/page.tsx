@@ -15,7 +15,7 @@ export default function PackManager() {
     if (saved) {
       try {
         setStickers(JSON.parse(saved));
-      } catch (e) {
+      } catch (e: any) {
         console.error("Failed to parse pack");
       }
     }
@@ -97,7 +97,7 @@ export default function PackManager() {
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
-    } catch (e) {
+    } catch (e: any) {
       alert("Failed to generate .wastickers file");
     }
   };
@@ -242,6 +242,7 @@ export default function PackManager() {
     </div>
   );
 }
+
 
 
 

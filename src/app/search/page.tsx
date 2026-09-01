@@ -144,7 +144,7 @@ export default function SearchPage() {
                        document.body.appendChild(link);
                        link.click();
                        document.body.removeChild(link);
-                     } catch (err) {
+                     } catch (err: any) {
                        alert('Failed to download image.');
                      }
                    }}
@@ -161,5 +161,6 @@ export default function SearchPage() {
     </div>
   );
 }
+
 
 
