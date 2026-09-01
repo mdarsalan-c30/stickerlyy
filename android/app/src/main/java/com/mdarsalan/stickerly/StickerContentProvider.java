@@ -32,7 +32,7 @@ public class StickerContentProvider extends ContentProvider {
 
     static {
         MATCHER.addURI(AUTHORITY, METADATA, METADATA_CODE);
-        MATCHER.addURI(AUTHORITY, METADATA + "/*", METADATA_CODE);
+        MATCHER.addURI(AUTHORITY, METADATA + "/*", 4);
         MATCHER.addURI(AUTHORITY, STICKERS + "/*", STICKERS_CODE);
         MATCHER.addURI(AUTHORITY, STICKERS + "/*/*", STICKERS_ASSET_CODE);
     }
@@ -46,7 +46,7 @@ public class StickerContentProvider extends ContentProvider {
     @Override
     public Cursor query(@NonNull Uri uri, @Nullable String[] projection, @Nullable String selection, @Nullable String[] selectionArgs, @Nullable String sortOrder) {
         int code = MATCHER.match(uri);
-        if (code == METADATA_CODE) {
+        if (code == METADATA_CODE || code == 4) {
             return getPackMetadata();
         } else if (code == STICKERS_CODE) {
             return getStickers(uri.getLastPathSegment());
@@ -118,6 +118,7 @@ public class StickerContentProvider extends ContentProvider {
     public String getType(@NonNull Uri uri) {
         int matchCode = MATCHER.match(uri);
         if (matchCode == METADATA_CODE) return "vnd.android.cursor.dir/vnd." + AUTHORITY + "." + METADATA;
+        if (matchCode == 4) return "vnd.android.cursor.item/vnd." + AUTHORITY + "." + METADATA;
         if (matchCode == STICKERS_CODE) return "vnd.android.cursor.dir/vnd." + AUTHORITY + "." + STICKERS;
         if (matchCode == STICKERS_ASSET_CODE) return "image/webp";
         return null;
@@ -131,6 +132,7 @@ public class StickerContentProvider extends ContentProvider {
     @Override
     public int update(@NonNull Uri uri, @Nullable ContentValues values, @Nullable String selection, @Nullable String[] selectionArgs) { return 0; }
 }
+
 
 
 
